@@ -142,3 +142,61 @@ footer {
   padding: 20px;
   color: #666;
 }
+
+#competitive-analysis-container {
+  max-width: 700px;
+}
+
+.section-description {
+  margin-bottom: 15px;
+  color: #555;
+  font-size: 0.95em;
+}
+
+.search-abstract {
+  background-color: #f0f4ff;
+  border: 1px solid #c5cae9;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.search-abstract h4 {
+  color: #1a237e;
+  margin-bottom: 8px;
+}
+
+.search-abstract a {
+  color: #0066cc;
+  word-break: break-all;
+}
+
+#search-topics h4 {
+  color: #1a237e;
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ddd;
+}
+
+.search-result-item {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  background-color: #f9f9f9;
+}
+
+.search-result-item p {
+  margin-bottom: 5px;
+}
+
+.search-result-item a {
+  color: #0066cc;
+  font-size: 0.85em;
+  word-break: break-all;
+}
+
+.info-text {
+  color: #555;
+  font-style: italic;
+}
