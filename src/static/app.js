@@ -81,6 +81,113 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // Handle search form submission
+  const searchForm = document.getElementById("search-form");
+  const searchResults = document.getElementById("search-results");
+  const searchAbstract = document.getElementById("search-abstract");
+  const searchTopics = document.getElementById("search-topics");
+  const searchMessage = document.getElementById("search-message");
+  const searchButton = document.getElementById("search-button");
+
+  searchForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const query = document.getElementById("search-query").value.trim();
+    if (!query) return;
+
+    searchButton.disabled = true;
+    searchButton.textContent = "Searching...";
+    searchResults.classList.add("hidden");
+    searchMessage.classList.add("hidden");
+
+    try {
+      const response = await fetch(`/search?query=${encodeURIComponent(query)}`);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.detail || "Search failed");
+      }
+
+      // Render abstract
+      searchAbstract.innerHTML = "";
+      if (data.abstract) {
+        const abstractDiv = document.createElement("div");
+        abstractDiv.className = "search-abstract";
+
+        const abstractTitle = document.createElement("h4");
+        abstractTitle.textContent = "Summary";
+        abstractDiv.appendChild(abstractTitle);
+
+        const abstractText = document.createElement("p");
+        abstractText.textContent = data.abstract;
+        abstractDiv.appendChild(abstractText);
+
+        if (data.abstract_url) {
+          const sourceP = document.createElement("p");
+          const sourceLink = document.createElement("a");
+          sourceLink.href = data.abstract_url;
+          sourceLink.target = "_blank";
+          sourceLink.rel = "noopener noreferrer";
+          sourceLink.textContent = `Source: ${data.abstract_source || data.abstract_url}`;
+          sourceP.appendChild(sourceLink);
+          abstractDiv.appendChild(sourceP);
+        }
+
+        searchAbstract.appendChild(abstractDiv);
+      }
+
+      // Render related topics
+      searchTopics.innerHTML = "";
+      if (data.related_topics && data.related_topics.length > 0) {
+        const topicsTitle = document.createElement("h4");
+        topicsTitle.textContent = "Related Topics";
+        searchTopics.appendChild(topicsTitle);
+
+        data.related_topics.forEach((topic) => {
+          const item = document.createElement("div");
+          item.className = "search-result-item";
+
+          const text = document.createElement("p");
+          text.textContent = topic.text;
+          item.appendChild(text);
+
+          if (topic.url) {
+            const link = document.createElement("a");
+            link.href = topic.url;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            link.textContent = topic.url;
+            item.appendChild(link);
+          }
+
+          searchTopics.appendChild(item);
+        });
+      }
+
+      if (!data.abstract && (!data.related_topics || data.related_topics.length === 0)) {
+        const noResults = document.createElement("p");
+        noResults.className = "info-text";
+        const noResultsMsg = document.createTextNode('No results found for "');
+        const strong = document.createElement("strong");
+        strong.textContent = query;
+        noResults.appendChild(noResultsMsg);
+        noResults.appendChild(strong);
+        noResults.appendChild(document.createTextNode('". Try a different search term.'));
+        searchAbstract.appendChild(noResults);
+      }
+
+      searchResults.classList.remove("hidden");
+    } catch (error) {
+      searchMessage.textContent = error.message || "Search failed. Please try again.";
+      searchMessage.className = "error";
+      searchMessage.classList.remove("hidden");
+      console.error("Error during search:", error);
+    } finally {
+      searchButton.disabled = false;
+      searchButton.textContent = "Search";
+    }
+  });
+
   // Initialize app
   fetchActivities();
 });
