@@ -74,6 +74,14 @@ section h3 {
   margin-bottom: 8px;
 }
 
+.activity-card p strong {
+  color: #333;
+}
+
+.activity-card p:last-child strong {
+  color: #2e7d32;
+}
+
 .form-group {
   margin-bottom: 15px;
 }
